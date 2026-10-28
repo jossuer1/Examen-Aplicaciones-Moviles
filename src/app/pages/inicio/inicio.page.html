@@ -1,0 +1,110 @@
+<ion-header
+  ><ion-toolbar
+    ><ion-title
+      ><span class="app-brand"
+        ><span class="brand-mark" aria-hidden="true">UI</span
+        ><span>UrbanInspect<small>GESTIÓN URBANA · QUITO</small></span></span
+      ></ion-title
+    ></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Distrito Metropolitano de Quito</span>
+        <h1>Una ciudad mejor,<br />una inspección a la vez.</h1>
+        <p>Registra hallazgos, revisa los casos y acompaña su atención desde un solo lugar.</p>
+        <ion-button routerLink="/tabs/nueva"
+          ><ion-icon slot="start" name="add-outline"></ion-icon>Registrar incidencia</ion-button
+        >
+      </div>
+      <div class="city-art" aria-hidden="true">
+        <svg viewBox="0 0 340 210" fill="none">
+          <path d="M12 160 83 81 113 115 182 22 228 89 258 59 329 159" stroke="currentColor" stroke-width="2" />
+          <path
+            d="M12 170h316M32 170v-42h29v42m12 0v-55h35v55m15 0v-30h30v30m18 0v-67h39v67m15 0v-45h35v45m17 0v-28h29v28M188 103V72m-11 31h28M44 137v5m0 9v5m43-32v8m9-8v8m-9 9v8m9-8v8m87-36v9m14-9v9m-14 10v9m14-9v9m-14 10v9m14-9v9m40-28v8m12-8v8m-12 8v8m12-8v8"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <path d="M188 62v-13m-6 7h12" stroke="#c91f3d" stroke-width="3" />
+          <circle cx="278" cy="35" r="13" stroke="#c91f3d" stroke-width="2" /></svg
+        ><span>INSPECCIÓN · SEGUIMIENTO · ATENCIÓN</span>
+      </div>
+    </section>
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Panel de operaciones</span>
+        <h2>Resumen de inspecciones</h2>
+      </div>
+      <ion-button fill="clear" size="small" [disabled]="loading()" (click)="cargar()"
+        ><ion-icon slot="start" name="refresh-outline"></ion-icon>Actualizar indicadores</ion-button
+      >
+    </div>
+    @if (loading()) {
+    <div class="notice" role="status"><ion-spinner></ion-spinner> Actualizando indicadores...</div>
+    } @if (error()) {
+    <p class="notice error" role="alert">
+      No se pudieron actualizar los indicadores. Los valores anteriores pueden estar desactualizados.
+    </p>
+    } @if (resumen(); as r) {
+    <div class="metrics-grid">
+      <ion-card class="metric metric-total"
+        ><a routerLink="/tabs/incidencias" aria-label="Consultar todas las incidencias"
+          ><span class="metric-top">Total de reportes<ion-icon name="layers-outline"></ion-icon></span
+          ><ion-card-title>{{ r.total }} incidencias</ion-card-title
+          ><span class="metric-bottom">Consultar listado<ion-icon name="arrow-forward-outline"></ion-icon></span></a
+      ></ion-card>
+      <a class="metric" routerLink="/tabs/incidencias" [queryParams]="{ estado: 'pendiente' }"
+        ><span class="metric-top">Pendientes<ion-icon name="time-outline"></ion-icon></span
+        ><strong class="metric-number">{{ r.pendiente }}</strong
+        ><span class="metric-bottom">Por atender<span class="metric-dot red"></span></span
+      ></a>
+      <a class="metric" routerLink="/tabs/incidencias" [queryParams]="{ estado: 'en_proceso' }"
+        ><span class="metric-top">En proceso<ion-icon name="construct-outline"></ion-icon></span
+        ><strong class="metric-number">{{ r.en_proceso }}</strong
+        ><span class="metric-bottom">En atención<span class="metric-dot blue"></span></span
+      ></a>
+      <a class="metric" routerLink="/tabs/incidencias" [queryParams]="{ estado: 'resuelta' }"
+        ><span class="metric-top">Resueltas<ion-icon name="checkmark-circle-outline"></ion-icon></span
+        ><strong class="metric-number">{{ r.resuelta }}</strong
+        ><span class="metric-bottom">Casos atendidos<span class="metric-dot"></span></span
+      ></a>
+    </div>
+    @if (r.sinClasificar) {
+    <p class="notice warning">Hay {{ r.sinClasificar }} reportes con estado no reconocido.</p>
+    } @if (r.total === 0) {
+    <p class="notice">No hay incidencias registradas. Crea tu primer reporte.</p>
+    } }
+    <div class="section-heading">
+      <h2>Accesos rápidos</h2>
+      <span class="section-note">Tu espacio de trabajo</span>
+    </div>
+    <div class="quick-grid">
+      <a class="quick-action" routerLink="/tabs/nueva"
+        ><span class="quick-icon red"><ion-icon name="add-outline"></ion-icon></span
+        ><span><strong>Nuevo reporte</strong><small>Documenta un hallazgo en campo</small></span
+        ><ion-icon name="arrow-forward-outline"></ion-icon
+      ></a>
+      <a class="quick-action" aria-label="Ver incidencias" routerLink="/tabs/incidencias"
+        ><span class="quick-icon"><ion-icon name="document-text-outline"></ion-icon></span
+        ><span><strong>Ver incidencias</strong><small>Consulta la información de cada caso</small></span
+        ><ion-icon name="arrow-forward-outline"></ion-icon
+      ></a>
+      <a class="quick-action" routerLink="/tabs/seguimiento"
+        ><span class="quick-icon"><ion-icon name="bookmark-outline"></ion-icon></span
+        ><span
+          ><strong>Mi seguimiento <b>{{ marcadas() }}</b></strong
+          ><small>Reportes guardados en este dispositivo</small></span
+        ><ion-icon name="arrow-forward-outline"></ion-icon
+      ></a>
+    </div>
+    <div class="home-footnote">
+      <ion-icon name="shield-checkmark-outline"></ion-icon
+      ><span
+        >Información conectada al servicio de incidencias. Tus marcas de seguimiento se guardan solo en este
+        dispositivo.</span
+      >
+    </div>
+  </main>
+</ion-content>

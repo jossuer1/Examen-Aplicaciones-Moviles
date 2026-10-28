@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  cloudinaryCloudName: 'dkqewmgdn',
+  cloudinaryPreset: 'examenAndroind',
   production: false,
+  incidenciasUrl: 'https://6ae1407fbe3bc8fead98549b.mockapi.io/indicencias/incidencias',
 };
 
 /*

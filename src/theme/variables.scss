@@ -1,2 +1,38 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+:root {
+  color-scheme: light;
+  --ion-color-primary: #004b87;
+  --ion-color-primary-rgb: 0, 75, 135;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #004277;
+  --ion-color-primary-tint: #1a5d93;
+  --ion-color-secondary: #125e9e;
+  --ion-color-secondary-rgb: 18, 94, 158;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-shade: #10538b;
+  --ion-color-secondary-tint: #2a6ea8;
+  --ion-color-danger: #c91f3d;
+  --ion-color-danger-rgb: 201, 31, 61;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #b11b36;
+  --ion-color-danger-tint: #ce354f;
+  --ion-color-success: #24745c;
+  --ion-color-success-rgb: 36, 116, 92;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-shade: #206651;
+  --ion-color-success-tint: #3a826c;
+  --ion-color-warning: #95600e;
+  --ion-color-warning-rgb: 149, 96, 14;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-shade: #83540c;
+  --ion-color-warning-tint: #a07026;
+  --ion-background-color: #f4f6fa;
+  --ion-text-color: #172b43;
+  --ion-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --ion-card-background: #ffffff;
+  --ion-item-background: #ffffff;
+  --ui-blue: #004b87;
+  --ui-navy: #082c50;
+  --ui-red: #c91f3d;
+  --ui-muted: #617186;
+  --ui-border: #e0e7ef;
+}

@@ -1,0 +1,121 @@
+<ion-header
+  ><ion-toolbar
+    ><ion-buttons slot="start"><ion-back-button defaultHref="/tabs/incidencias" text=""></ion-back-button></ion-buttons
+    ><ion-title
+      ><span class="app-brand"
+        ><span class="brand-mark" aria-hidden="true">UI</span
+        ><span>UrbanInspect<small>GESTIÓN URBANA · QUITO</small></span></span
+      ></ion-title
+    ></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">Expediente de inspección</span>
+        <h1>Detalle de incidencia</h1>
+        <p>Información del hallazgo y seguimiento de su atención.</p>
+      </div>
+    </div>
+    @if (loading) {
+    <div class="empty-state" role="status">
+      <ion-spinner></ion-spinner>
+      <p>Cargando información...</p>
+    </div>
+    } @if (error) {
+    <div class="notice error" role="alert">
+      <p>No se pudo cargar la incidencia.</p>
+      <ion-button fill="outline" (click)="cargar()">Reintentar</ion-button>
+    </div>
+    } @if (item) {
+    <div class="detail-layout">
+      <section class="detail-panel detail-information">
+        <div class="detail-topline">
+          <span class="incident-kind">{{ item.tipo }}</span
+          ><ion-badge [color]="color(item.estado)">{{ etiqueta(item.estado) }}</ion-badge>
+        </div>
+        <h2>{{ item.descripcion }}</h2>
+        <p class="detail-code">{{ item.codigo }}</p>
+        @if (item.fotoUrl) { <img class="detail-image" [src]="item.fotoUrl" alt="Fotografía de la incidencia" /> } @else
+        {
+        <div class="detail-no-photo">Este reporte no incluye fotografía.</div>
+        }
+        <dl class="detail-fields">
+          <div class="wide">
+            <dt>Dirección</dt>
+            <dd>{{ item.direccion }}</dd>
+          </div>
+          <div>
+            <dt>Sector</dt>
+            <dd>{{ item.sector }}</dd>
+          </div>
+          <div>
+            <dt>Prioridad</dt>
+            <dd class="capitalized">{{ item.prioridad }}</dd>
+          </div>
+          <div>
+            <dt>Fecha de registro</dt>
+            <dd>{{ item.fecha | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </div>
+          <div>
+            <dt>Estado actual</dt>
+            <dd>{{ etiqueta(item.estado) }}</dd>
+          </div>
+          @if (item.latitud !== null && item.longitud !== null) {
+          <div class="wide">
+            <dt>Coordenadas del lugar</dt>
+            <dd>{{ item.latitud }}, {{ item.longitud }}</dd>
+          </div>
+          } @if (item.observacion) {
+          <div class="wide">
+            <dt>Observación registrada</dt>
+            <dd>{{ item.observacion }}</dd>
+          </div>
+          }
+        </dl>
+      </section>
+      <aside class="detail-panel detail-actions">
+        <span class="eyebrow">Gestión del caso</span>
+        <h2>Actualizar estado</h2>
+        <p>Registra el avance de la atención de esta incidencia.</p>
+        <div class="state-track">
+          <span [class.active]="item.estado === 'pendiente'">Pendiente</span
+          ><span [class.active]="item.estado === 'en_proceso'">En proceso</span
+          ><span [class.active]="item.estado === 'resuelta'">Resuelta</span>
+        </div>
+        @if (esFinal) {
+        <div class="notice">Esta incidencia está resuelta y ya no puede cambiar de estado.</div>
+        } @else { @if (puede('resuelta')) {
+        <ion-textarea
+          class="observation"
+          label="Observación (obligatoria para resolver)"
+          labelPlacement="stacked"
+          placeholder="Describe la atención realizada y el resultado"
+          fill="outline"
+          [rows]="5"
+          [disabled]="guardando"
+          [value]="observacion"
+          (ionInput)="onObservacion($event)"
+        ></ion-textarea>
+        @if (errorObservacion) {
+        <p class="notice error" role="alert">Debes ingresar una observación para marcarla como resuelta.</p>
+        } }
+        <div class="detail-button-group">
+          @if (puede('en_proceso')) {
+          <ion-button expand="block" fill="outline" [disabled]="guardando" (click)="cambiar('en_proceso')"
+            >Marcar en proceso</ion-button
+          >
+          } @if (puede('resuelta')) {
+          <ion-button expand="block" [disabled]="guardando" (click)="cambiar('resuelta')"
+            >{{ guardando ? 'Actualizando...' : 'Marcar como resuelta' }}</ion-button
+          >
+          }
+        </div>
+        <p class="action-hint">Los cambios se guardan en el servicio de incidencias.</p>
+        }
+      </aside>
+    </div>
+    }
+  </main>
+</ion-content>

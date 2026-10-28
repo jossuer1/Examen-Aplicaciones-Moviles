@@ -1,0 +1,89 @@
+<ion-header
+  ><ion-toolbar
+    ><ion-title
+      ><span class="app-brand"
+        ><span class="brand-mark" aria-hidden="true">UI</span
+        ><span>UrbanInspect<small>GESTIÓN URBANA · QUITO</small></span></span
+      ></ion-title
+    ></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">Mi dispositivo</span>
+        <h1>Seguimiento</h1>
+        <p>Los casos que has marcado para darles seguimiento.</p>
+      </div>
+      <div class="heading-action">
+        <ion-button routerLink="/tabs/nueva"
+          ><ion-icon slot="start" name="add-outline"></ion-icon>Nuevo reporte</ion-button
+        >
+      </div>
+    </div>
+    @if (loading) {
+    <div class="empty-state" role="status">
+      <ion-spinner></ion-spinner>
+      <p>Consultando incidencias...</p>
+    </div>
+    } @if (!loading && !error && items.length === 0) {
+    <div class="empty-state">
+      <h2>Tu seguimiento está vacío</h2>
+      <p>Marca la estrella de un reporte para encontrarlo aquí.</p>
+    </div>
+    }
+    <div class="incident-list">
+      @for (i of items; track i.codigo) {
+      <ion-card class="incident-card">
+        <div class="incident-body">
+          @if (i.fotoUrl) {
+          <img class="incident-photo" [src]="i.fotoUrl" alt="Fotografía de la incidencia" loading="lazy" /> } @else {
+          <div class="incident-photo photo-placeholder">
+            <ion-icon name="image-outline" aria-hidden="true"></ion-icon><span>Sin fotografía</span>
+          </div>
+          }
+          <div class="incident-summary">
+            <div class="incident-meta">
+              <span class="incident-kind">{{ i.tipo }}</span
+              ><span class="incident-code" [title]="i.codigo">{{ i.codigo }}</span>
+            </div>
+            <h2>{{ i.descripcion }}</h2>
+            <div class="incident-details">
+              <p><strong>Dirección:</strong> {{ i.direccion }}</p>
+              <p><strong>Sector:</strong> {{ i.sector }}</p>
+              <p><strong>Fecha:</strong> {{ i.fecha | date: 'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="incident-footer">
+          <ion-badge
+            class="status"
+            [color]="i.estado === 'pendiente' ? 'warning' : i.estado === 'en_proceso' ? 'primary' : 'success'"
+            >{{ i.estado === 'pendiente' ? 'Pendiente' : i.estado === 'en_proceso' ? 'En proceso' : 'Resuelta'
+            }}</ion-badge
+          >
+          <ion-button fill="clear" size="small" [routerLink]="['/detalle', i.id]"
+            >Ver detalle<ion-icon slot="end" name="arrow-forward-outline"></ion-icon
+          ></ion-button>
+          <ion-button
+            class="star-action is-marked"
+            fill="solid"
+            size="small"
+            aria-label="Quitar del seguimiento"
+            title="Quitar del seguimiento"
+            (click)="quitar($event, i)"
+            ><ion-icon name="star" aria-hidden="true"></ion-icon
+          ></ion-button>
+        </div>
+      </ion-card>
+      }
+    </div>
+    @if (error) {
+    <div class="notice error" role="alert">
+      <p>No se pudo consultar el servicio de incidencias.</p>
+      <ion-button fill="outline" (click)="cargar()">Reintentar</ion-button>
+    </div>
+    }
+  </main>
+</ion-content>

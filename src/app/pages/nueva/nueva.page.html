@@ -1,0 +1,300 @@
+<ion-header
+  ><ion-toolbar
+    ><ion-title
+      ><span class="app-brand"
+        ><span class="brand-mark" aria-hidden="true">UI</span
+        ><span>UrbanInspect<small>GESTIÓN URBANA · QUITO</small></span></span
+      ></ion-title
+    ></ion-toolbar
+  ></ion-header
+>
+<ion-content>
+  <main class="page-shell">
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">Inspección de campo</span>
+        <h1>Nueva incidencia</h1>
+        <p>Documenta el hallazgo y adjunta la información necesaria para su atención.</p>
+      </div>
+      <span class="draft-tag"><span></span>Borrador automático</span>
+    </div>
+    @if (cargandoBorrador) {
+    <p class="notice" role="status">Revisando borrador guardado...</p>
+    } @if (avisoBorrador) {
+    <p class="notice" role="status">{{ avisoBorrador }}</p>
+    } @if (borradorPendiente) {
+    <section class="form-panel recovery-panel" aria-label="Recuperar registro incompleto">
+      <span class="panel-icon"><ion-icon name="document-text-outline"></ion-icon></span>
+      <h2>Tienes un registro sin terminar</h2>
+      <p>¿Deseas continuar con los datos guardados o descartarlos?</p>
+      <div class="button-row">
+        <ion-button (click)="continuarBorrador()">Continuar registro</ion-button
+        ><ion-button fill="outline" color="danger" (click)="descartarBorrador()">Descartar borrador</ion-button>
+      </div>
+    </section>
+    } @if (!cargandoBorrador && !borradorPendiente) {
+    <fieldset class="new-layout" [disabled]="guardando || buscando || tomandoFoto || consultandoClima">
+      <section class="form-panel data-panel">
+        <div class="panel-heading">
+          <span class="panel-step">01</span>
+          <div>
+            <h2>Datos del reporte</h2>
+            <p>Los campos con * son obligatorios.</p>
+          </div>
+          <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <form [formGroup]="form">
+          <ion-list class="field-grid">
+            <div class="field">
+              <ion-item lines="none"
+                ><ion-select
+                  label="Tipo *"
+                  labelPlacement="stacked"
+                  placeholder="Selecciona el tipo"
+                  formControlName="tipo"
+                  ><ion-select-option value="luminaria">Luminaria</ion-select-option
+                  ><ion-select-option value="bache">Bache</ion-select-option
+                  ><ion-select-option value="señalizacion">Señalización</ion-select-option
+                  ><ion-select-option value="alcantarilla">Alcantarilla</ion-select-option
+                  ><ion-select-option value="parque">Parque</ion-select-option></ion-select
+                ></ion-item
+              >@if (invalido('tipo')) {
+              <p class="err">Selecciona el tipo de incidencia.</p>
+              }
+            </div>
+            <div class="field">
+              <ion-item lines="none"
+                ><ion-select
+                  label="Prioridad *"
+                  labelPlacement="stacked"
+                  placeholder="Selecciona la prioridad"
+                  formControlName="prioridad"
+                  ><ion-select-option value="baja">Baja</ion-select-option
+                  ><ion-select-option value="media">Media</ion-select-option
+                  ><ion-select-option value="alta">Alta</ion-select-option></ion-select
+                ></ion-item
+              >@if (invalido('prioridad')) {
+              <p class="err">Selecciona la prioridad.</p>
+              }
+            </div>
+            <div class="field field-wide">
+              <ion-item lines="none"
+                ><ion-textarea
+                  label="Descripción *"
+                  labelPlacement="stacked"
+                  placeholder="Describe el problema y los detalles observados en campo"
+                  [rows]="4"
+                  formControlName="descripcion"
+                ></ion-textarea></ion-item
+              >@if (invalido('descripcion')) {
+              <p class="err">La descripción es obligatoria.</p>
+              }
+            </div>
+            <div class="field">
+              <ion-item lines="none"
+                ><ion-input
+                  label="Dirección *"
+                  labelPlacement="stacked"
+                  placeholder="Avenida, calle y referencia"
+                  formControlName="direccion"
+                ></ion-input></ion-item
+              >@if (invalido('direccion')) {
+              <p class="err">La dirección es obligatoria.</p>
+              }
+            </div>
+            <div class="field">
+              <ion-item lines="none"
+                ><ion-input
+                  label="Sector *"
+                  labelPlacement="stacked"
+                  placeholder="Barrio o sector de la ciudad"
+                  formControlName="sector"
+                ></ion-input></ion-item
+              >@if (invalido('sector')) {
+              <p class="err">El sector es obligatorio.</p>
+              }
+            </div>
+          </ion-list>
+        </form>
+      </section>
+      <section class="form-panel location-panel">
+        <div class="panel-heading">
+          <span class="panel-step">02</span>
+          <div>
+            <h2>Ubicación</h2>
+            <p>
+              {{ tipo === 'bache' ? 'Obligatoria para reportar un bache.' : 'Opcional para este tipo de incidencia.' }}
+            </p>
+          </div>
+          <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <div class="location-visual" [class.has-location]="coords">
+          <ion-icon name="location-outline" aria-hidden="true"></ion-icon
+          ><strong>{{ coords ? 'Ubicación registrada' : 'Sitúa el hallazgo' }}</strong>
+          <p>
+            {{ coords ? 'Las coordenadas se adjuntarán al reporte.' : 'Usa el GPS o ingresa las coordenadas del lugar.'
+            }}
+          </p>
+        </div>
+        <ion-button expand="block" [disabled]="guardando || buscando || tomandoFoto" (click)="usarGps()"
+          ><ion-icon slot="start" name="location-outline"></ion-icon>{{ buscando ? 'Obteniendo ubicación...' : 'Usar mi
+          ubicación actual' }}</ion-button
+        >
+        <ion-button
+          class="manual-toggle"
+          expand="block"
+          fill="clear"
+          [disabled]="guardando || buscando"
+          (click)="mostrarManual = !mostrarManual"
+          >Ingresar coordenadas manualmente</ion-button
+        >
+        @if (mensaje) {
+        <p class="notice error" role="alert">{{ mensaje }}</p>
+        } @if (mostrarManual) {
+        <ion-list class="field-grid manual-fields"
+          ><div class="field">
+            <ion-item lines="none"
+              ><ion-input
+                [disabled]="guardando"
+                label="Latitud"
+                labelPlacement="stacked"
+                inputmode="decimal"
+                placeholder="-0.180653"
+                [(ngModel)]="latTxt"
+                (ngModelChange)="persistir()"
+              ></ion-input
+            ></ion-item>
+          </div>
+          <div class="field">
+            <ion-item lines="none"
+              ><ion-input
+                [disabled]="guardando"
+                label="Longitud"
+                labelPlacement="stacked"
+                inputmode="decimal"
+                placeholder="-78.467834"
+                [(ngModel)]="lngTxt"
+                (ngModelChange)="persistir()"
+              ></ion-input
+            ></ion-item></div
+        ></ion-list>
+        <ion-button expand="block" fill="outline" [disabled]="guardando || buscando" (click)="usarManual()"
+          >Usar estas coordenadas</ion-button
+        >
+        } @if (coords) {
+        <div class="coordinates">
+          <span><strong>Coordenadas:</strong><br />{{ coords.latitud }}, {{ coords.longitud }}</span
+          ><ion-button
+            fill="clear"
+            size="small"
+            color="danger"
+            [disabled]="guardando || buscando"
+            (click)="quitarUbicacion()"
+            >Quitar</ion-button
+          >
+        </div>
+        } @if (faltaUbicacion && intentoGuardar) {
+        <p class="notice error">Para registrar un bache debes obtener el GPS o ingresar coordenadas válidas.</p>
+        }
+      </section>
+      <section class="form-panel photo-panel">
+        <div class="panel-heading">
+          <span class="panel-step">03</span>
+          <div>
+            <h2>Evidencia fotográfica</h2>
+            <p>
+              {{ prioridad === 'alta' ? 'Obligatoria por prioridad alta.' : 'Una fotografía ayuda a evaluar el caso.' }}
+            </p>
+          </div>
+          <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
+        </div>
+        @if (foto) {
+        <div class="photo-preview">
+          <img [src]="foto" alt="Vista previa de la fotografía" /><span>Vista previa del reporte</span>
+        </div>
+        } @else {
+        <div class="photo-empty">
+          <span><ion-icon name="camera-outline" aria-hidden="true"></ion-icon></span
+          ><strong>Agrega evidencia del hallazgo</strong>
+          <p>Toma una fotografía clara del problema y su entorno.</p>
+        </div>
+        }
+        <div class="button-row">
+          <ion-button [disabled]="tomandoFoto || guardando" (click)="tomarFoto()"
+            ><ion-icon slot="start" name="camera-outline"></ion-icon>{{ tomandoFoto ? 'Capturando fotografía...' : foto
+            ? 'Volver a tomar fotografía' : 'Tomar fotografía' }}</ion-button
+          >@if (foto) {
+          <ion-button fill="clear" color="danger" [disabled]="guardando || tomandoFoto" (click)="quitarFoto()"
+            >Quitar fotografía</ion-button
+          >
+          }
+        </div>
+        @if (mensajeFoto) {
+        <p class="notice error" role="alert">{{ mensajeFoto }}</p>
+        } @if (faltaFoto && intentoGuardar) {
+        <p class="notice error">Con prioridad alta debes adjuntar una fotografía.</p>
+        }
+      </section>
+      <section class="form-panel weather-panel">
+        <div class="panel-heading">
+          <span class="panel-step">04</span>
+          <div>
+            <h2>Condiciones del lugar</h2>
+            <p>Clima de la ubicación del reporte.</p>
+          </div>
+          <ion-icon name="cloud-outline" aria-hidden="true"></ion-icon>
+        </div>
+        @if (clima) {
+        <div class="weather-grid">
+          <div>
+            <span>Temperatura</span><strong>{{ clima.temperatura }}<small> °C</small></strong>
+          </div>
+          <div>
+            <span>Lluvia · última hora</span><strong>{{ clima.precipitacion1h }}<small> mm</small></strong>
+          </div>
+          <div class="weather-condition">
+            <ion-icon name="cloud-outline"></ion-icon><span>{{ clima.descripcion }}</span>
+          </div>
+        </div>
+        @if (clima.lluviaFuerte) {
+        <p class="notice warning" role="status">
+          Advertencia: la lluvia de la última hora supera los 5 mm. Las condiciones podrían dificultar el mantenimiento.
+        </p>
+        } } @else {
+        <div class="weather-empty">
+          <ion-icon name="cloud-outline" aria-hidden="true"></ion-icon>
+          <p>Consulta las condiciones meteorológicas antes de la intervención.</p>
+        </div>
+        }
+        <ion-button
+          expand="block"
+          fill="outline"
+          [disabled]="guardando || consultandoClima || buscando"
+          (click)="consultarClima()"
+          ><ion-icon slot="start" name="refresh-outline"></ion-icon>{{ consultandoClima ? 'Consultando clima...' :
+          'Consultar clima' }}</ion-button
+        >
+        <p class="field-hint">
+          Se consulta también al guardar con coordenadas. Un fallo del servicio no impide registrar el caso.
+        </p>
+        @if (climaError) {
+        <p class="notice error" role="alert">{{ climaError }}</p>
+        }
+      </section>
+    </fieldset>
+    @if (mensajeGuardado) {
+    <p class="notice" role="status" [class.error]="errorGuardado">{{ mensajeGuardado }}</p>
+    }
+    <div class="save-bar">
+      <div>
+        <strong>Todo listo para registrar</strong>
+        <p>Verifica la información antes de enviar el reporte.</p>
+      </div>
+      <ion-button size="large" [disabled]="guardando || buscando || consultandoClima || tomandoFoto" (click)="guardar()"
+        ><ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>{{ guardando ? 'Guardando...' : 'Guardar
+        incidencia' }}</ion-button
+      >
+    </div>
+    }
+  </main>
+</ion-content>
