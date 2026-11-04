@@ -106,3 +106,13 @@ Compilar `assembleDebug` desde Android Studio o `android/gradlew.bat`. APK: `and
 ## Repositorio y entrega
 
 Incluir código fuente, `android/`, este README, tests y lockfile. No incluir node_modules, www, builds, `.local/`, `android/local.properties` ni secretos. Crear el repositorio GitHub personal y subirlo antes de la defensa; esa cuenta y la explicación oral corresponden al estudiante. La interfaz funcional se puede mejorar después sin cambiar estas reglas.
+
+## Mejora posterior: splash y logo
+
+Trabajo aislado en `mejoras/splash-logo`. La rama `main` permanece en su commit original `0a77b2e`. La etiqueta `evidencia-antes-splash` conserva además los cambios locales que existían antes de esta mejora. No se fusiona la mejora sobre la versión original.
+
+El logo vectorial propio está en `src/assets/brand/urbaninspect-logo.svg`: edificios dentro de un pin, con la paleta blanca, azul y roja. Se utiliza en encabezados, favicon y pantalla de inicio. Android incluye recursos vectoriales equivalentes para el icono instalable y el splash nativo, compatibles con máscaras adaptativas.
+
+El splash de la interfaz dura 1,2 segundos a partir del primer renderizado y solo aparece al arrancar. No espera a la API ni bloquea por problemas de conexión. Se respeta la preferencia de movimiento reducido y se retira la navegación del foco mientras está visible. Android muestra el mismo símbolo durante la carga nativa.
+
+Cloudinary continúa integrado mediante `ImagenService`; no se modificaron sus credenciales ni el flujo de subida de fotografías. La prueba `e2e/splash.spec.ts` verifica logo visible, desaparición del splash y navegación posterior.

@@ -550,3 +550,10 @@ ion-tab-button ion-label {
   color: var(--ui-muted);
   margin: 12px 0 0;
 }
+
+.brand-logo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
