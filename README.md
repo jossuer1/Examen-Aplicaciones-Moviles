@@ -58,7 +58,9 @@ export const environment = {
 npm run datos:demo
 ```
 
-Este comando **modifica la API configurada**: respalda en `.local/backups`, corrige solo filas automáticas con `estado N` y `tipo N`, y agrega ejemplos hasta 24. No borra registros ni reemplaza incidencias reales. Es idempotente al alcanzar el total. Los ejemplos tienen tres estados, cinco tipos y tres prioridades; las fotos de demostración usan una imagen pública de ejemplo, no evidencia real. El listado de 8 permite demostrar tres páginas.
+Este comando **modifica la API configurada**: respalda los registros existentes en `.local/backups/` y agrega un catálogo de 17 incidencias con direcciones y sectores de Quito: **10 pendientes, 5 en proceso y 2 resueltas**. No elimina ni sobrescribe registros; al repetirlo omite los códigos `UIO-0001` a `UIO-0017` existentes. El listado de 8 permite demostrar tres páginas.
+
+Los títulos visibles no incluyen las etiquetas DEMO ni prueba. El catálogo es ficticio y las fotos de Quito son referencias de los lugares, no evidencia real del daño. Créditos y licencias: [scripts/FOTOS_QUITO.md](scripts/FOTOS_QUITO.md). Vista previa sin acceso a la API: `node scripts/preparar-datos.mjs --preview`.
 
 ## Verificaciones
 

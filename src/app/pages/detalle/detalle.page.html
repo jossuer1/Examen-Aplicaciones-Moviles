@@ -40,6 +40,12 @@
         @if (item.fotoUrl) { <img class="detail-image" [src]="item.fotoUrl" alt="Fotografía de la incidencia" /> } @else
         {
         <div class="detail-no-photo">Este reporte no incluye fotografía.</div>
+        } @if (item.fotoCredito && item.fotoFuente) {
+        <p class="photo-credit">
+          Foto de referencia ·
+          <a [href]="item.fotoFuente" target="_blank" rel="noopener noreferrer">{{ item.fotoCredito }}</a> @if
+          (item.fotoLicencia) { · <a [href]="item.fotoLicencia" target="_blank" rel="noopener noreferrer">Licencia</a> }
+        </p>
         }
         <dl class="detail-fields">
           <div class="wide">

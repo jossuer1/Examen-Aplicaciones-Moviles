@@ -51,3 +51,7 @@ APK entregable: `entrega/UrbanInspect-debug.apk`. Instrucciones: `entrega/COMO_I
 Paleta blanca, azul y roja, encabezado y navegación uniformes. Incidencias y Seguimiento muestran fotografía a la izquierda, resumen a la derecha y acciones/estado en una franja inferior. Inicio incluye indicadores pulsables con filtro de estado remoto y accesos rápidos. Nueva se organiza en cuatro paneles: datos, ubicación, fotografía y clima. Detalle mantiene el mismo lenguaje visual.
 
 Se inspeccionaron capturas de móvil (393 px) y escritorio (1440 px), incluyendo la parte inferior del formulario. La prueba de diseño verifica que no exista desbordamiento horizontal, la posición izquierda de la imagen y el filtro remoto de los contadores. El nuevo APK se recompiló correctamente y reemplaza `entrega/UrbanInspect-debug.apk`.
+
+## Actualización del catálogo de Quito
+
+Después de que el usuario eliminó los registros anteriores, se cargaron a su solicitud 17 casos: 10 pendientes, 5 en proceso y 2 resueltas. Se verificó la distribución en MockAPI. Los títulos ya no contienen prefijos de demostración. Las fotos son referencias de lugares de Quito, con créditos y licencia en el detalle; no documentan los daños ficticios descritos. El script es repetible sin duplicar códigos ni borrar otros registros.

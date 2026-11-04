@@ -13,6 +13,9 @@ export interface Incidencia {
   estado: Estado;
   prioridad: Prioridad;
   fotoUrl: string;
+  fotoCredito?: string;
+  fotoFuente?: string;
+  fotoLicencia?: string;
   latitud: number | null;
   longitud: number | null;
   observacion: string;
