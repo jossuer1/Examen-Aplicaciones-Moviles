@@ -1,14 +1,21 @@
-<ion-header
-  ><ion-toolbar
-    ><ion-title
-      ><span class="app-brand"
-        ><img class="brand-logo" src="assets/brand/urbaninspect-logo.svg" alt="" aria-hidden="true" /><span
-          >UrbanInspect<small>GESTIÓN URBANA · QUITO</small></span
-        ></span
-      ></ion-title
-    ></ion-toolbar
-  ></ion-header
->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <span class="app-brand">
+        <img class="brand-logo" src="assets/brand/urbaninspect-logo.svg" alt="" aria-hidden="true" />
+        <span>UrbanInspect<small>GESTIÓN URBANA · QUITO</small></span>
+      </span>
+    </ion-title>
+    <ion-buttons slot="end">
+      @if (usuario(); as u) {
+        <ion-button fill="clear" class="user-chip-btn" (click)="cerrarSesion()" title="Cerrar sesión">
+          <span class="user-chip-name">{{ u.displayName || u.email }}</span>
+          <ion-icon slot="end" name="log-out-outline"></ion-icon>
+        </ion-button>
+      }
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
   <main class="page-shell">
     <section class="hero">

@@ -19,7 +19,9 @@
     "test:e2e": "playwright test",
     "datos:demo": "node scripts/preparar-datos.mjs",
     "android:sync": "npm run build && npx cap sync android",
-    "android:open": "npx cap open android"
+    "android:open": "npx cap open android",
+    "firebase:login": "npx firebase-tools login",
+    "deploy:firebase": "npm run build && npx firebase-tools deploy --only hosting"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +42,7 @@
     "@capacitor/status-bar": "8.0.4",
     "@ionic/angular": "^9.0.0",
     "@ionic/pwa-elements": "^3.4.0",
+    "firebase": "^13.2.0",
     "ionicons": "^8.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

@@ -1,0 +1,144 @@
+<ion-content class="login-content" [fullscreen]="true">
+  <div class="login-shell">
+    <div class="login-decorations" aria-hidden="true">
+      <div class="decor-circle circle-1"></div>
+      <div class="decor-circle circle-2"></div>
+    </div>
+
+    <div class="login-card">
+      <header class="login-header">
+        <div class="brand-badge">
+          <img src="assets/brand/urbaninspect-logo.svg" alt="UrbanInspect" width="68" height="68" />
+        </div>
+        <h1>UrbanInspect</h1>
+        <p class="brand-subtitle">GESTIÓN URBANA · QUITO</p>
+        <div class="accent-bar" aria-hidden="true"></div>
+      </header>
+
+      <div class="mode-selector">
+        <ion-segment [value]="modo()" (ionChange)="cambiarModo($any($event).detail.value)">
+          <ion-segment-button value="login">
+            <ion-label>Iniciar sesión</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="registro">
+            <ion-label>Crear cuenta</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      @if (mensajeError()) {
+        <div class="alert-box error" role="alert">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>{{ mensajeError() }}</span>
+        </div>
+      }
+
+      @if (mensajeExito()) {
+        <div class="alert-box success" role="status">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>{{ mensajeExito() }}</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+        @if (modo() === 'registro') {
+          <div class="form-group" [class.has-error]="form.get('nombre')?.touched && form.get('nombre')?.invalid">
+            <label for="nombre">Nombre completo</label>
+            <div class="input-wrapper">
+              <ion-icon name="person-outline" class="input-icon"></ion-icon>
+              <input
+                id="nombre"
+                type="text"
+                formControlName="nombre"
+                placeholder="Ej. Ing. Carlos Pérez"
+                autocomplete="name"
+              />
+            </div>
+            @if (form.get('nombre')?.touched && form.get('nombre')?.invalid) {
+              <small class="error-msg">Ingresa un nombre de al menos 2 caracteres.</small>
+            }
+          </div>
+        }
+
+        <div class="form-group" [class.has-error]="emailInvalido">
+          <label for="email">Correo institucional / electrónico</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="inspector@urbaninspect.gob.ec"
+              autocomplete="email"
+            />
+          </div>
+          @if (emailInvalido) {
+            <small class="error-msg">Ingresa un correo electrónico válido.</small>
+          }
+        </div>
+
+        <div class="form-group" [class.has-error]="passwordInvalido">
+          <div class="label-row">
+            <label for="password">Contraseña</label>
+            @if (modo() === 'login') {
+              <button type="button" class="forgot-btn" (click)="abrirRecuperacion()">
+                ¿Olvidaste tu contraseña?
+              </button>
+            }
+          </div>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+            <input
+              id="password"
+              [type]="mostrarPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="eye-btn"
+              (click)="alternarVerPassword()"
+              [attr.aria-label]="mostrarPassword() ? 'Ocultar contraseña' : 'Ver contraseña'"
+            >
+              <ion-icon [name]="mostrarPassword() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+          @if (passwordInvalido) {
+            <small class="error-msg">La contraseña debe tener mínimo 6 caracteres.</small>
+          }
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="cargando()">
+          @if (cargando()) {
+            <ion-spinner name="crescent"></ion-spinner>
+            <span>Conectando con Firebase...</span>
+          } @else {
+            <ion-icon [name]="modo() === 'login' ? 'log-in-outline' : 'person-add-outline'"></ion-icon>
+            <span>{{ modo() === 'login' ? 'Iniciar Sesión' : 'Registrarse en Firebase' }}</span>
+          }
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>O también</span>
+      </div>
+
+      <div class="demo-section">
+        <button type="button" class="demo-btn" (click)="ingresarModoDemo()" [disabled]="cargando()">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>Acceder con Cuenta de Demostración</span>
+        </button>
+        <p class="demo-hint">
+          Útil para pruebas rápidas de interfaz o evaluación sin conexión previa a Firebase.
+        </p>
+      </div>
+
+      <footer class="login-footer">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        <span>Autenticación segura respaldada por Firebase Authentication</span>
+      </footer>
+    </div>
+  </div>
+</ion-content>
+

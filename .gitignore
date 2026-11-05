@@ -81,3 +81,8 @@ Thumbs.db
 
 # El APK se entrega por separado del codigo fuente
 /entrega/*.apk
+
+# Firebase
+/.firebase/
+firebase-debug.log
+firebase-debug.*.log
